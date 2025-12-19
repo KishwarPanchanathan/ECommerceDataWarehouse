@@ -40,3 +40,61 @@ def build_dim_customer(df_customers, df_loyalty_program):
     ]
 
     return dim_customer
+
+def build_dim_product(df_products):
+
+
+    dim_product = (
+        df_products[
+                ["product_id", "product_name", "category","brand", "cost", "price", "is_active"]
+            ]
+    )
+
+    dim_product["product_key"] = df_products.index + 1
+
+    dim_product = dim_product[
+        ["product_key", "product_id", "product_name", "category","brand", "cost", "price", "is_active"]
+    ]
+
+    return dim_product
+
+def build_dim_stores(df_stores):
+
+    dim_stores = (
+        df_stores[
+            ["store_id", "store_name","city", "state", "region"]
+        ]
+    )
+
+    dim_stores.loc[:, "store_key"] = dim_stores.index + 1
+
+    dim_stores = dim_stores[["store_key", "store_id", "store_name","city", "state", "region"]]
+
+    return dim_stores
+
+def build_fact_sales(df_order_items, df_orders, dim_date, dim_customer, dim_products, dim_stores):
+
+    df_orders["order_date"] = pd.to_datetime(df_orders["order_date"])
+
+    fact = (
+        df_order_items.merge(
+        df_orders[["order_id", "customer_id","store_id", "order_date"]],
+        on = "order_id",
+        how= "left"
+        )
+    )
+
+    fact = fact.merge(dim_customer[["customer_key", "customer_id"]], on="customer_id")
+    fact = fact.merge(dim_products[["product_key", "product_id","cost"]], on = "product_id")
+    fact = fact.merge(dim_stores[["store_key", "store_id"]], on="store_id")
+    fact = fact.merge(dim_date[["date_key", "full_date"]], left_on = "order_date", right_on = "full_date")
+
+    fact["total_price"] = fact["quantity"] * fact["unit_price"] - fact["discount"]
+    fact["profit"] = (fact["unit_price"] - fact["cost"]) * fact["quantity"]
+
+    fact = fact[
+        ["order_id", "date_key", "customer_key", "product_key", "store_key", "quantity", "unit_price","discount",
+         "total_price", "profit"]
+    ]
+
+    return fact
