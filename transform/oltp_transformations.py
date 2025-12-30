@@ -1,8 +1,12 @@
 
 import pandas as pd
+from load.olap_schema import *
 
 def build_dim_date(df_orders):
-    df_orders["order_date"] = pd.to_datetime(df_orders["order_date"])
+
+    create_dim_date()
+
+    df_orders["order_date"] = pd.to_datetime(df_orders["order_date"]).dt.normalize()
 
     dim_date = (df_orders[['order_date']]
                 .drop_duplicates()
@@ -19,6 +23,7 @@ def build_dim_date(df_orders):
     dim_date["year"] = dim_date["full_date"].dt.year
     dim_date["weekday"] = dim_date["full_date"].dt.weekday
     dim_date["weekday_name"] = dim_date["full_date"].dt.day_name()
+
 
     return dim_date
 
