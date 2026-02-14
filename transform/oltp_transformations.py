@@ -79,7 +79,7 @@ def build_dim_stores(df_stores):
 
 def build_fact_sales(df_order_items, df_orders, dim_date, dim_customer, dim_products, dim_stores):
 
-    df_orders["order_date"] = pd.to_datetime(df_orders["order_date"])
+    df_orders["order_date"] = pd.to_datetime(df_orders["order_date"]).dt.normalize()
 
     fact = (
         df_order_items.merge(
