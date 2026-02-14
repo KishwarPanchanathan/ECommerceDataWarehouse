@@ -11,7 +11,6 @@ def copy_dataframe(df, table_name):
     cols = ",".join(df.columns)
 
     with conn.cursor() as cur:
-        cur.execute(f"TRUNCATE TABLE {table_name} RESTART IDENTITY")
         cur.copy_expert(f"COPY {table_name} ({cols}) FROM STDIN WITH CSV", buffer)
 
     conn.commit()

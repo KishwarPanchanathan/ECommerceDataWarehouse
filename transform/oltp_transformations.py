@@ -97,8 +97,10 @@ def build_fact_sales(df_order_items, df_orders, dim_date, dim_customer, dim_prod
     fact["total_price"] = fact["quantity"] * fact["unit_price"] - fact["discount"]
     fact["profit"] = (fact["unit_price"] - fact["cost"]) * fact["quantity"]
 
+    fact.loc[:, "sales_key"] = fact.index + 1
+
     fact = fact[
-        ["order_id", "date_key", "customer_key", "product_key", "store_key", "quantity", "unit_price","discount",
+        ["sales_key", "order_id", "date_key", "customer_key", "product_key", "store_key", "quantity", "unit_price","discount",
          "total_price", "profit"]
     ]
 
