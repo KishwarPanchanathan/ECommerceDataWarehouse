@@ -9,6 +9,7 @@ def get_oltp_conn():
         user = OLTP_DB["user"],
         password = OLTP_DB["password"]
     ) as conn:
+        
         print("OLTP Connected Successfully.")
         
         return conn

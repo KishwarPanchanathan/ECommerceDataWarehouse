@@ -6,6 +6,8 @@ conn = get_olap_conn()
 
 cur = conn.cursor()
 
+olapSchema = "ecommerceolap_dw"
+
 def create_olap_schema():
 
     cur.execute("""
@@ -34,7 +36,7 @@ def create_dim_date():
     conn.commit()
 
 
-    return "Dim_Date table has been created."
+    print("Dim_Date table has been created.")
 
 
 def create_dim_product():
@@ -54,7 +56,7 @@ def create_dim_product():
     
     conn.commit()
     
-    return "Dim_Product table has been created."
+    print("Dim_Product table has been created.") 
 
 def create_dim_customer():
 
@@ -77,7 +79,7 @@ def create_dim_customer():
 
     conn.commit()
 
-    return "Dim_Customer table has been created."
+    print("Dim_Customer table has been created.")
 
 def create_dim_store():
 
@@ -95,7 +97,7 @@ def create_dim_store():
     )
 
     conn.commit()
-    return "Dim_Store table has been cretaed."
+    print("Dim_Store table has been cretaed.")
 
 
 def truncate_dw_olap():
@@ -114,7 +116,7 @@ def truncate_dw_olap():
 
     conn.commit()
 
-    return "Fact and Dimension tables are truncated."
+    print("Fact and Dimension tables are truncated.")
 
 
 def create_fact_sales():
@@ -139,4 +141,4 @@ def create_fact_sales():
 
     conn.commit()
 
-    return "Fact Sales table has been created."
+    print("Fact Sales table has been created.")

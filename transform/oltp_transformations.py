@@ -6,6 +6,8 @@ def build_dim_date(df_orders):
 
     create_dim_date()
 
+    print("Transformation Started for DIM_DATE")
+
     df_orders["order_date"] = pd.to_datetime(df_orders["order_date"]).dt.normalize()
 
     dim_date = (df_orders[['order_date']]
@@ -24,11 +26,13 @@ def build_dim_date(df_orders):
     dim_date["weekday"] = dim_date["full_date"].dt.weekday
     dim_date["weekday_name"] = dim_date["full_date"].dt.day_name()
 
-
+    print("Transformation Completed for DIM_DATE")
     return dim_date
 
 
 def build_dim_customer(df_customers, df_loyalty_program):
+
+    print("Transformation Started for DIM_CUSTOMER")
 
     dim_customer =  (
         df_customers.merge(df_loyalty_program[["customer_id","membership_tier"]], 
@@ -43,12 +47,13 @@ def build_dim_customer(df_customers, df_loyalty_program):
         ["customer_key", "customer_id", "first_name", 
          "last_name", "gender", "city", "state", "country", "join_date", "membership_tier"]
     ]
+    print("Transformation Completed for DIM_CUSTOMER")
 
     return dim_customer
 
 def build_dim_product(df_products):
 
-
+    print("Transformation Started for DIM_PRODUCT")
     dim_product = (
         df_products[
                 ["product_id", "product_name", "category","brand", "cost", "price", "is_active"]
@@ -61,9 +66,13 @@ def build_dim_product(df_products):
         ["product_key", "product_id", "product_name", "category","brand", "cost", "price", "is_active"]
     ]
 
+    print("Transformation Completed for DIM_PRODUCT")
+
     return dim_product
 
 def build_dim_stores(df_stores):
+
+    print("Transformation Started for DIM_STORE")
 
     dim_stores = (
         df_stores[
@@ -75,9 +84,13 @@ def build_dim_stores(df_stores):
 
     dim_stores = dim_stores[["store_key", "store_id", "store_name","city", "state", "region"]]
 
+    print("Transformation Completed for DIM_STORE")
+
     return dim_stores
 
 def build_fact_sales(df_order_items, df_orders, dim_date, dim_customer, dim_products, dim_stores):
+
+    print("Transformation Started for FACT_SALES")
 
     df_orders["order_date"] = pd.to_datetime(df_orders["order_date"]).dt.normalize()
 
@@ -103,5 +116,7 @@ def build_fact_sales(df_order_items, df_orders, dim_date, dim_customer, dim_prod
         ["sales_key", "order_id", "date_key", "customer_key", "product_key", "store_key", "quantity", "unit_price","discount",
          "total_price", "profit"]
     ]
+
+    print("Transformation Completed for FACT_SALES")
 
     return fact

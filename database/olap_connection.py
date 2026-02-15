@@ -10,4 +10,6 @@ def get_olap_conn():
         password = OLAP_DB["password"]
     ) as conn:
         
+        print("OLAP Connected Successfully.")
+        
         return conn
